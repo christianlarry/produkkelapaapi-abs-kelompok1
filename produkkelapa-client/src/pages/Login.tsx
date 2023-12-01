@@ -3,7 +3,6 @@ import { Link,useNavigate } from "react-router-dom"
 import { postLogin } from "../services/api"
 import axios from 'axios'
 import Cookies from 'js-cookie'
-
 const Login = () => {
   const navigate = useNavigate()
   const [error,setError] = useState<{type:string,msg:string,path:string,location:string}[]>()
@@ -41,14 +40,17 @@ const Login = () => {
     <div className='container mx-auto'>
       <div className="flex flex-col items-center">
         <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: 300 }} className="p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-xl">
+          <div style={{ width: 400 }} className="p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-xl">
             <h1 className="text-3xl font-semibold text-center text-gray-700">Login</h1>
             {error && 
-              <ul>
-                {error.map((err,i)=>(
-                  <li key={i}><span style={{color: 'red'}}>* {err.path + ': ' + err.msg}</span></li>
-                ))}
-              </ul>
+            <div role="alert" className="alert alert-error flex flex-col items-start my-2">
+              {error.map((err, i) => (
+                <div key={i} className="flex gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <span>{err.path}: {err.msg}</span>
+                </div>
+              ))}
+            </div>
             }
             <form className="space-y-4">
               <div>

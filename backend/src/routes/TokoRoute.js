@@ -1,6 +1,7 @@
 import express from 'express'
 import { body } from 'express-validator'
 import valMsg from '../utils/validationMessage.js'
+import checkRole from '../middlewares/checkRole.js'
 
 import * as TokoController from '../controllers/TokoController.js'
 
@@ -22,8 +23,8 @@ router.get('/toko',TokoController.getAllData)
 router.get('/toko/:id',TokoController.getDataById)
 router.get('/toko/:id/produk',TokoController.getProdukByTokoId)
 
-router.post('/toko',validation,TokoController.postData)
-router.put('/toko/:id',validation,TokoController.putData)
-router.delete('/toko/:id',TokoController.deleteData)
+router.post('/toko',checkRole('admin'),validation,TokoController.postData)
+router.put('/toko/:id',checkRole('admin'),validation,TokoController.putData)
+router.delete('/toko/:id',checkRole('admin'),TokoController.deleteData)
 
 export default router

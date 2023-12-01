@@ -1,7 +1,7 @@
 import db from '../config/Database.js'
 
 export const getAllData = (offset = 1, limit = 25) => {
-    const sql = `SELECT produk.id,id_toko,nama_produk,description,harga,nama_toko,daerah 
+    const sql = `SELECT produk.id,id_toko,nama_produk,description,manfaat,harga,nama_toko,daerah 
                 FROM produk
                 INNER JOIN toko ON toko.id = id_toko
                 LIMIT ${offset-1},${limit}
@@ -11,7 +11,7 @@ export const getAllData = (offset = 1, limit = 25) => {
 }
 
 export const getDataById = (id) => {
-    const sql = `SELECT produk.id,id_toko,nama_produk,description,harga,nama_toko,daerah 
+    const sql = `SELECT produk.id,id_toko,nama_produk,description,manfaat,harga,nama_toko,daerah 
                 FROM produk 
                 INNER JOIN toko ON toko.id = id_toko
                 WHERE produk.id=${id}`
@@ -24,8 +24,14 @@ export const searchData = (query) => {
     produk.id,
     id_toko,
     nama_produk,
-    description 
-    FROM produk WHERE
+    harga,
+    description,
+    manfaat,
+    nama_toko,
+    daerah 
+    FROM produk
+    INNER JOIN toko ON toko.id = id_toko
+    WHERE
     nama_produk LIKE '%${query}%' OR 
     description LIKE '%${query}%'`
 
@@ -39,7 +45,7 @@ export const totalData = () => {
 }
 
 export const getProdukByTokoId = (id) => {
-    const sql = `SELECT produk.id,id_toko,nama_produk,description 
+    const sql = `SELECT produk.id,id_toko,nama_produk,harga,description,manfaat 
                 FROM produk
                 WHERE id_toko = ${id}
                 ORDER BY nama_produk ASC`

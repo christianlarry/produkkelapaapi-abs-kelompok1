@@ -1,20 +1,20 @@
 import db from '../config/Database.js'
 
 export const getAllData = ()=>{
-    const sql = `SELECT username,password,role FROM users`
+    const sql = `SELECT id,username,password,role FROM users`
 
     return db.query(sql)
 }
 
 export const getDataById = (id)=>{
-    const sql = `SELECT username,password,role FROM users
-                WHERE user.id = ${id}`
+    const sql = `SELECT id,username,password,role FROM users
+                WHERE users.id = ${id}`
 
     return db.query(sql)
 }
 
 export const getDataByUsername = (username)=>{
-    const sql = `SELECT username,password,role
+    const sql = `SELECT id,username,password,role
                 FROM users
                 WHERE username = '${username}'`
 
@@ -22,7 +22,7 @@ export const getDataByUsername = (username)=>{
 }
 
 export const getDataByRole = (role)=>{
-    const sql = `SELECT username,password,role
+    const sql = `SELECT id,username,password,role
                 FROM users
                 WHERE role = '${role}'`
 
@@ -38,7 +38,7 @@ export const postData = (body)=>{
 
 export const updateData = (id,body)=>{
     const sql = `UPDATE users
-                SET username = '${body.username}',password = '${body.password}',role = '${body.role}' WHERE id = ${id}`
+                SET username = '${body.username}',role = '${body.role}' WHERE id = ${id}`
 
     return db.query(sql)
 }

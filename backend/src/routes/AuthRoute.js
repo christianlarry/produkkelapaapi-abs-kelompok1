@@ -46,4 +46,6 @@ router.post('/login',[
 ], validateLoginAndCreateToken)
 router.post('/logout', authenticateToken, handleLogout)
 
+router.get('/check-token',authenticateToken,(req,res)=>res.sendStatus(200))
+
 export default router

@@ -1,19 +1,20 @@
-const express = require('express')
-const {body} = require('express-validator')
-const {getAllData,getDataById,postData,updateData,updatePassword,updateUsername,deleteData} = require('../controllers/UserController')
-const valMsg = require('../utils/validationMessage')
-const checkRole = require('../middlewares/checkRole')
+import express from 'express'
+import {body} from 'express-validator'
+import {getAllData,getDataById,postData,updateData,updatePassword,updateUsername,deleteData} from '../controllers/UserController.js'
+import valMsg from '../utils/validationMessage.js'
+import checkRole from '../middlewares/checkRole.js'
 
 const router = express.Router()
 
 router.get('/user',checkRole('admin'),getAllData)
 router.get('/user/:id',checkRole('admin'),getDataById)
 
-const dataValidation = [
+router.post('/user',checkRole('admin'),[
     body('username')
         .exists().withMessage(valMsg.existsMsg)
         .notEmpty().withMessage(valMsg.emptyMsg)
         .isLength({min: 4,max: 32}).withMessage('Minimal 4 sampai 32 karakter')
+        .isAlpha().withMessage(valMsg.AlphaMsg)
         .toLowerCase().customSanitizer(value=>{
             if(value){
                 return value.replace(' ','')
@@ -32,11 +33,29 @@ const dataValidation = [
             return false
         }).withMessage(valMsg.invalidOptionMsg)
         .escape()
-]
+],postData)
 
-router.post('/user',checkRole('admin'),dataValidation,postData)
-
-router.put('/user/:id',checkRole('admin'),dataValidation,updateData)
+router.put('/user/:id',checkRole('admin'),[
+    body('username')
+        .exists().withMessage(valMsg.existsMsg)
+        .notEmpty().withMessage(valMsg.emptyMsg)
+        .isLength({min: 4,max: 32}).withMessage('Minimal 4 sampai 32 karakter')
+        .isAlpha().withMessage(valMsg.AlphaMsg)
+        .toLowerCase().customSanitizer(value=>{
+            if(value){
+                return value.replace(' ','')
+            }
+        })
+        .escape(),
+    body('role')
+        .exists().withMessage(valMsg.existsMsg)
+        .notEmpty().withMessage(valMsg.emptyMsg)
+        .custom(value=>{
+            if(['admin','user'].includes(value)) return true
+            return false
+        }).withMessage(valMsg.invalidOptionMsg)
+        .escape()
+],updateData)
 
 router.patch('/user/username/:id',[
     body('username')
@@ -60,4 +79,4 @@ router.patch('/user/password/:id',[
 
 router.delete('/user/:id',checkRole('admin'),deleteData)
 
-module.exports = router;
+export default router;

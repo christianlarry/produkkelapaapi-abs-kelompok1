@@ -1,28 +1,42 @@
-import Navbar from '../components/Navbar'
-import { getToko, searchToko } from "../services/api"
 import { useEffect, useState } from "react"
-import axios from "axios"
-import useToken from "../hooks/useToken"
-import { Link } from "react-router-dom"
+import {isAxiosError} from "axios"
+import { Link, useOutletContext } from "react-router-dom"
+import Navbar from "../../../components/Navbar"
+import { getAllProduk, searchProduk } from "../../../services/api"
+import formatCurrency from "../../../utils/formatCurrency"
 
-const Beranda = () => {
+interface ProdukModel{
+  id:number
+  id_toko:number
+  nama_produk:string
+  harga:number
+  description?:string | null
+  manfaat?:string | null
+  nama_toko:string
+  daerah:string
+}
 
-  const token = useToken()
+type UsersRole = 'admin'|'user'
 
-  const [toko, setToko] = useState<{ id: number, nama_toko: string, daerah: string }[]>()
+const AdminProduk = ()=>{
+
+  // GET DATA FROM AdminContainer
+  const {token} = useOutletContext<{token:string,userRole:UsersRole}>()
+
+  const [produk, setProduk] = useState<ProdukModel[]>()
   const [pagination, setPagination] = useState<{ size: number, total: number, totalPages: number, current: string | number }>()
   const [isSearch, setIsSearch] = useState<boolean>(false)
 
   const [page, setPage] = useState<number>(1)
 
   const getAndSetToko = () => {
-    getToko(token, page, 25)
+    getAllProduk(token, page, 25)
       .then(value => {
-        setToko(value.data.data)
+        setProduk(value.data.data)
         setPagination(value.data.page)
       })
       .catch(err => {
-        if (axios.isAxiosError(err)) {
+        if (isAxiosError(err)) {
           if (err.response && (err.response.status === 401 || err.response.status === 403)) {
 
           }
@@ -31,9 +45,9 @@ const Beranda = () => {
   }
 
   const searchAndSetToko = (search: string) => {
-    searchToko(token, search)
+    searchProduk(token, search)
       .then(val => {
-        setToko(val.data.data)
+        setProduk(val.data.data)
         setPagination(undefined)
       })
       .catch(err => {
@@ -64,9 +78,10 @@ const Beranda = () => {
       <Navbar />
       <div className="py-10">
         <section className="flex flex-col items-center gap-12">
-          <h2 className="text-lg font-bold text-center">Daftar Toko yang menjual Produk Olahan Kelapa di Sulawesi Utara</h2>
-          <div>
-            <input type="text" placeholder="Cari Toko" className="input input-bordered w-full max-w-xs" onChange={handleSearchInput} />
+          <h2 className="text-lg font-bold text-center"><span className="text-red-500">[ADMIN]</span> Data Seluruh Produk Olahan Kelapa</h2>
+          <div className="flex gap-5">
+            <button className="btn btn-outline btn-success">+ Tambah Produk</button>
+            <input type="text" placeholder="Cari Produk" className="input input-bordered w-full max-w-xs" onChange={handleSearchInput} />
           </div>
           <div className="overflow-x-auto self-stretch">
             <table className="table">
@@ -74,22 +89,33 @@ const Beranda = () => {
               <thead>
                 <tr>
                   <th></th>
-                  <th>Nama Toko</th>
-                  <th>Daerah</th>
-                  <th>Lihat Produk</th>
+                  <th>Nama Produk</th>
+                  <th>Harga</th>
+                  <th>Description</th>
+                  <th>Manfaat</th>
+                  <th>Toko</th>
+                  <th style={{width: 200}}>Aksi</th>
                 </tr>
               </thead>
               <tbody>
-                {toko && toko.map((data, i) => (
+                {produk && produk.map((data, i) => (
                   <tr key={i}>
                     <th>{(((isSearch ? 1 : page) - 1) * 25 + 1) + i}</th>
-                    <td>{data.nama_toko}</td>
-                    <td>{data.daerah}</td>
-                    <td>
-                      <button className="btn btn-primary btn-sm">
-                        <Link to={`/toko/${data.id}/produk`} state={{toko:{nama_toko: data.nama_toko,daerah: data.daerah}}}>
-                          Lihat Produk
+                    <td>{data.nama_produk}</td>
+                    <td>{formatCurrency(data.harga)}</td>
+                    <td>{data.description?data.description:'-'}</td>
+                    <td>{data.manfaat?data.manfaat:'-'}</td>
+                    <td><b>{data.nama_toko}</b><br/>{data.daerah}</td>
+                    <td className="flex gap-2">
+                      <button className="btn btn-warning btn-sm">
+                        <Link to={`/toko/${data.id}/ubah`} state={{ toko: { nama_toko: data.nama_toko, daerah: data.daerah } }}>
+                          Ubah
                         </Link>
+                      </button>
+                      <button className="btn btn-error btn-sm">
+                        <span>
+                          Hapus
+                        </span>
                       </button>
                     </td>
                   </tr>
@@ -110,4 +136,4 @@ const Beranda = () => {
   )
 }
 
-export default Beranda
+export default AdminProduk

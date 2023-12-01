@@ -1,6 +1,7 @@
 import express from 'express'
 import { body } from 'express-validator'
 import valMsg from '../utils/validationMessage.js'
+import checkRole from '../middlewares/checkRole.js'
 
 import * as ProdukController from '../controllers/ProdukController.js'
 
@@ -32,8 +33,8 @@ const router = express.Router()
 router.get('/produk',ProdukController.getAllData)
 router.get('/produk/:id',ProdukController.getDataById)
 
-router.post('/produk',validation,ProdukController.postData)
-router.put('/produk/:id',validation,ProdukController.putData)
-router.delete('/produk/:id',ProdukController.deleteData)
+router.post('/produk',checkRole('admin'),validation,ProdukController.postData)
+router.put('/produk/:id',checkRole('admin'),validation,ProdukController.putData)
+router.delete('/produk/:id',checkRole('admin'),ProdukController.deleteData)
 
 export default router

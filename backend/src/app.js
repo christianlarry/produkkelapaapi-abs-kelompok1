@@ -9,6 +9,8 @@ import BaseRoute from './routes/BaseRoute.js'
 import AuthRoute from './routes/AuthRoute.js'
 import TokoRoute from './routes/TokoRoute.js'
 import ProdukRoute from './routes/ProdukRoute.js'
+import UserRoute from './routes/UserRoute.js'
+
 import authenticateToken from './middlewares/authenticateToken.js'
 // END IMPORT ROUTES
 
@@ -30,6 +32,7 @@ app.use('/',AuthRoute)
 app.use('/api',authenticateToken)
 app.use('/api',TokoRoute)
 app.use('/api',ProdukRoute)
+app.use('/api',UserRoute)
 // END USE ROUTE
 
 // HTTP SERVER LISTEN
