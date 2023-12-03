@@ -1,8 +1,10 @@
-import { useLocation, useNavigate, useOutletContext, useParams } from "react-router-dom"
+import { useNavigate, useOutletContext, useParams } from "react-router-dom"
 import Navbar from "../../../components/Navbar"
-import { useState } from "react"
-import { patchUserPassword, putUser } from "../../../services/api"
+import { useEffect, useState } from "react"
+import { getUserById, patchUserPassword, putUser } from "../../../services/api"
 import { isAxiosError } from "axios"
+
+type UsersRole = 'admin'|'user'
 
 const AdminUsersUbah = () => {
 
@@ -11,20 +13,40 @@ const AdminUsersUbah = () => {
   if(isNaN(Number(id)) || Number(id)===0 || !id) return (
     <div role="alert" className="alert alert-error">
       <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-      <span>Error 400. ID TOKO pada url tidak valid!</span>
+      <span>Error 400. ID USER pada url tidak valid!</span>
     </div>
   )
 
   const navigate = useNavigate()
   const {token} = useOutletContext<{token:string}>()
 
-  // AMBIL DATA STATE DARI LINK YANG DIKLIK/HALAMAN SEBELUMNYA
-  const {state} = useLocation()
+  // AMBIL DATA USER
+  const [user,setUser] = useState<{id:number,username:string,password:string,role:UsersRole}>()
+	const [isNotFound,setIsNotFound] = useState<boolean>(false)
+  useEffect(()=>{
+    if(token){
+      getUserById(token,Number(id))
+        .then(res=>{
+          if(res.status === 200) setUser(res.data.data[0])
+        })
+        .catch(err=>{
+          if(isAxiosError(err) && err.response && err.response.status === 404) setIsNotFound(true)
+        })
+    }
+  },[token])
 
   // STATE INPUT
-  const [username,setUsername] = useState<string>(state.username)
+  const [username,setUsername] = useState<string>()
+  const [role,setRole] = useState<'user'|'admin'>()
   const [password,setPassword] = useState<string>()
-  const [role,setRole] = useState<'user'|'admin'>(state.role)
+
+  useEffect(()=>{
+    if(user){
+      setUsername(user.username)
+      setRole(user.role)
+      // PASSWORD HARUS KOSONG
+    }
+  },[user])
 
   // STATE ERROR MSG
   const [reqError,setReqError] = useState<{msg:string,path:string}[]>()
@@ -70,7 +92,7 @@ const AdminUsersUbah = () => {
     }
   }
 
-  return (
+  if(user) return (
     <div className="container mx-auto">
       <Navbar />
       <div className="py-10">
@@ -92,13 +114,13 @@ const AdminUsersUbah = () => {
               <div className="label">
                 <span className="label-text">Masukkan username baru</span>
               </div>
-              <input value={state.username} onChange={(e)=>setUsername(e.target.value)} type="text" placeholder="Ex: clintonlombogia" className="input input-bordered w-full" required/>
+              <input defaultValue={user.username} onChange={(e)=>setUsername(e.target.value)} type="text" placeholder="Ex: clintonlombogia" className="input input-bordered w-full" required/>
             </label>
             <label className="form-control w-full max-w-xs">
               <div className="label">
                 <span className="label-text">Role Pengguna</span>
               </div>
-              <select value={state.role} onChange={(e)=>{if(e.target.value==='user'||e.target.value==='admin') setRole(e.target.value)}} className="select select-bordered" required>
+              <select defaultValue={user.role} onChange={(e)=>{if(e.target.value==='user'||e.target.value==='admin') setRole(e.target.value)}} className="select select-bordered" required>
                 <option value=''>-- Pilih role --</option>
                 <option value='user'>User</option>
                 <option value='admin'>Admin</option>
@@ -128,6 +150,13 @@ const AdminUsersUbah = () => {
           </form>
         </section>
       </div>
+    </div>
+  )
+
+  if(isNotFound) return (
+    <div role="alert" className="alert alert-error">
+      <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <span>Error 404. Toko tidak ditemukkan!</span>
     </div>
   )
 }

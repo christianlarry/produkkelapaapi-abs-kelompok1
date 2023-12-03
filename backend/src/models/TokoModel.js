@@ -46,3 +46,36 @@ export const deleteData = (id)=>{
     
     return db.query(sql)
 }
+
+// PENDING TOKO MODEL
+export const getAllPendingToko = ()=>{
+    const sql = 'SELECT * FROM pending_toko'
+
+    return db.query(sql)
+}
+
+export const getPendingTokoById = (id)=>{
+    const sql = `SELECT * FROM pending_toko WHERE id=${id}`
+
+    return db.query(sql)
+}
+
+export const getPendingTokoByPostById = (postById)=>{
+    const sql = `SELECT * FROM pending_toko WHERE post_by=${postById}`
+
+    return db.query(sql)
+}
+
+export const postPendingToko = (body)=>{
+    const sql = `INSERT INTO pending_toko(post_by,nama_toko,daerah) VALUES
+                (${body.postBy},'${body.namaToko}','${body.daerah}')`
+
+    return db.query(sql)
+}
+
+export const deletePendingToko = (id)=>{
+    const sql = `DELETE FROM pending_toko
+                WHERE id=${id}`
+    
+    return db.query(sql)
+}

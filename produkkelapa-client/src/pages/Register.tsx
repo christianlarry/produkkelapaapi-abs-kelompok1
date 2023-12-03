@@ -1,19 +1,21 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { postRegister } from "../services/api"
 import axios from 'axios'
 
 const Register = () => {
   const navigate = useNavigate()
-  const [error, setError] = useState<{ type: string, msg: string, path: string, location: string }[]>()
+  const [error, setError] = useState<{ type?: string, msg: string, path: string, location?: string }[]>()
 
-  const usernameRef: React.RefObject<HTMLInputElement> = useRef(null)
-  const passwordRef: React.RefObject<HTMLInputElement> = useRef(null)
+  const [username,setUsername] = useState<string>()
+  const [password,setPassword] = useState<string>()
+  const [konfirmasiPassword,setKonfirmasiPassword] = useState<string>()
 
-  const handleDaftar = () => {
-    if (usernameRef.current && passwordRef.current) {
-      const username = usernameRef.current.value ? usernameRef.current.value : ''
-      const password = passwordRef.current.value ? passwordRef.current.value : ''
+  const handleDaftar = (e:React.FormEvent) => {
+    e.preventDefault()
+    if (username && password && konfirmasiPassword) {
+
+      if(password !== konfirmasiPassword) return setError([{msg:'Password dan konfirmasi password tidak sama',path: 'Password'}])
 
       postRegister({ username, password })
         .then(value => {
@@ -48,22 +50,29 @@ const Register = () => {
               ))}
             </div>
             }
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleDaftar}>
               <div>
                 <label className="label">
                   <span className="text-base label-text">Username</span>
                 </label>
-                <input ref={usernameRef} type="text" placeholder="Username" className="w-full input input-bordered" required />
+                <input onChange={(e)=>setUsername(e.target.value)} type="text" placeholder="Username" className="w-full input input-bordered" required />
               </div>
               <div>
                 <label className="label">
                   <span className="text-base label-text">Password</span>
                 </label>
-                <input ref={passwordRef} type="password" placeholder="Masukkan Password"
+                <input onChange={(e)=>setPassword(e.target.value)} type="password" placeholder="Masukkan Password"
                   className="w-full input input-bordered" required />
               </div>
               <div>
-                <button className="btn btn-block" type="button" onClick={handleDaftar}>Daftar</button>
+                <label className="label">
+                  <span className="text-base label-text">Konfirmasi Password</span>
+                </label>
+                <input onChange={(e)=>setKonfirmasiPassword(e.target.value)} type="password" placeholder="Masukkan Password"
+                  className="w-full input input-bordered" required />
+              </div>
+              <div>
+                <button className="btn btn-block btn-primary" type="submit">Daftar</button>
               </div>
               <span>Sudah punya akun ?
                 <Link to="/login" className="text-blue-600 hover:text-blue-800 hover:underline">Login</Link></span>

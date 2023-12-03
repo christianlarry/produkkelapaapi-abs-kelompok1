@@ -31,10 +31,20 @@ const validation = [
 const router = express.Router()
 
 router.get('/produk',ProdukController.getAllData)
+
+// GET PENDING PRODUK
+router.get('/produk/pending',ProdukController.getAllPendingProduk)
+router.get('/produk/pending/post-by/:id',ProdukController.getPendingProdukByPostById)
+
 router.get('/produk/:id',ProdukController.getDataById)
 
 router.post('/produk',checkRole('admin'),validation,ProdukController.postData)
 router.put('/produk/:id',checkRole('admin'),validation,ProdukController.putData)
 router.delete('/produk/:id',checkRole('admin'),ProdukController.deleteData)
+
+// POST/DELETE PENDING PRODUK
+router.post('/produk/pending',validation,ProdukController.postPendingProduk)
+router.post('/produk/pending/:id/approve',checkRole('admin'),ProdukController.approvePendingProduk)
+router.delete('/produk/pending/:id',ProdukController.deletePendingProduk)
 
 export default router

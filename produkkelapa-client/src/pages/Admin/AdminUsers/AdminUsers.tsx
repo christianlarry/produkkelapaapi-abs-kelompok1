@@ -81,11 +81,9 @@ const AdminUsers = ()=>{
                     <td>{data.username}</td>
                     <td>{data.role}</td>
                     <td className="flex gap-2">
-                      <button className="btn btn-warning btn-sm">
-                        <Link to={`/admin/users/${data.id}/ubah`} state={{id:data.id,username:data.username,password:data.password,role:data.role}}>
-                          Ubah
-                        </Link>
-                      </button>
+                      <Link className="btn btn-warning btn-sm" to={`/admin/users/${data.id}/ubah`} state={{id:data.id,username:data.username,password:data.password,role:data.role}}>
+                        Ubah
+                      </Link>
                       <button className="btn btn-error btn-sm" onClick={()=>hapusUser(data.id)}>
                         <span>
                           Hapus

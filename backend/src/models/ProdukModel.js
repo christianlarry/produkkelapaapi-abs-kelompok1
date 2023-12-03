@@ -55,7 +55,7 @@ export const getProdukByTokoId = (id) => {
 
 export const postData = (body) => {
     const sql = `INSERT INTO produk(id_toko,nama_produk,harga,description,manfaat) VALUES
-                (${body.idToko},'${body.nama_produk}',${body.harga},'${body.description}','${body.manfaat}')`
+                (${body.idToko},'${body.namaProduk}',${body.harga},'${body.description}','${body.manfaat}')`
 
     return db.query(sql)
 }
@@ -64,7 +64,7 @@ export const putData = (id, body) => {
     const sql = `UPDATE produk 
                 SET
                     id_toko=${body.idToko}, 
-                    nama_produk='${body.namaToko}', 
+                    nama_produk='${body.namaProduk}', 
                     harga=${body.harga},
                     description='${body.description}',
                     manfaat='${body.manfaat}'
@@ -77,5 +77,38 @@ export const deleteData = (id) => {
     const sql = `DELETE FROM produk
                 WHERE id=${id}`
 
+    return db.query(sql)
+}
+
+// PENDING PRODUK MODEL
+export const getAllPendingProduk = ()=>{
+    const sql = 'SELECT * FROM pending_produk'
+
+    return db.query(sql)
+}
+
+export const getPendingProdukById = (id)=>{
+    const sql = `SELECT * FROM pending_produk WHERE id=${id}`
+
+    return db.query(sql)
+}
+
+export const getPendingProdukByPostById = (postById)=>{
+    const sql = `SELECT * FROM pending_produk WHERE post_by=${postById}`
+
+    return db.query(sql)
+}
+
+export const postPendingProduk = (body)=>{
+    const sql = `INSERT INTO pending_produk(post_by,id_toko,nama_produk,harga,description,manfaat) VALUES
+                (${body.postBy},${body.idToko},'${body.namaProduk}',${body.harga},'${body.description}','${body.manfaat}')`
+
+    return db.query(sql)
+}
+
+export const deletePendingProduk = (id)=>{
+    const sql = `DELETE FROM pending_produk
+                WHERE id=${id}`
+    
     return db.query(sql)
 }

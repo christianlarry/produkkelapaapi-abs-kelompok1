@@ -2,6 +2,8 @@ import axios from "axios";
 
 const baseUrl = 'http://localhost:5000/'
 
+// TOKO -------------------------------------
+
 export const getToko = (token:string,page:number=1,limit:number=25)=>{
   return axios.get(`${baseUrl}api/toko?page=${page}&limit=${limit}`,{
     headers: {
@@ -10,8 +12,60 @@ export const getToko = (token:string,page:number=1,limit:number=25)=>{
   })
 }
 
+export const getTokoById = (token:string,id:number)=>{
+  return axios.get(`${baseUrl}api/toko/${id}`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const searchToko = (token:string,search:string)=>{
+  return axios.get(`${baseUrl}api/toko?search=${search}`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const postToko = (token:string,data:{namaToko:string,daerah:string})=>{
+  return axios.post(`${baseUrl}api/toko`,data,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const putToko = (token:string,id:number,data:{namaToko:string,daerah:string})=>{
+  return axios.put(`${baseUrl}api/toko/${id}`,data,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const deleteToko = (token:string,id:number)=>{
+  return axios.delete(`${baseUrl}api/toko/${id}`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+// TOKO END -------------------------------------
+
+// PRODUK -------------------------------------
+
 export const getAllProduk = (token:string,page:number=1,limit:number=25)=>{
   return axios.get(`${baseUrl}api/produk?page=${page}&limit=${limit}`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const getProdukById = (token:string,id:number)=>{
+  return axios.get(`${baseUrl}api/produk/${id}`,{
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -34,13 +88,33 @@ export const getProdukByIdToko = (token:string,id:number)=>{
   })
 }
 
-export const searchToko = (token:string,search:string)=>{
-  return axios.get(`${baseUrl}api/toko?search=${search}`,{
+export const postProduk = (token:string,data:{idToko:number,namaProduk:string,harga:number,description:string,manfaat:string})=>{
+  return axios.post(`${baseUrl}api/produk`,data,{
     headers: {
       Authorization: `Bearer ${token}`
     }
   })
 }
+
+export const putProduk = (token:string,id:number,data:{idToko:number,namaProduk:string,harga:number,description:string,manfaat:string})=>{
+  return axios.put(`${baseUrl}api/produk/${id}`,data,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const deleteProduk = (token:string,id:number)=>{
+  return axios.delete(`${baseUrl}api/produk/${id}`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+// PRODUK END -------------------------------------
+
+// AUTH -------------------------------------
 
 export const postLogin = (data:{username:string,password:string})=>{
   return axios.post(`${baseUrl}login`,data)
@@ -62,8 +136,18 @@ export const checkToken = (token:string)=>{
   }})
 }
 
+// AUTH END -------------------------------------
+
+// USERS -------------------------------------
+
 export const getUsers = (token:string)=>{
   return axios.get(`${baseUrl}api/user`,{headers:{
+    Authorization: `Bearer ${token}`
+  }})
+}
+
+export const getUserById = (token:string,id:number)=>{
+  return axios.get(`${baseUrl}api/user/${id}`,{headers:{
     Authorization: `Bearer ${token}`
   }})
 }
@@ -91,3 +175,5 @@ export const deleteUser = (token:string,id:number)=>{
     Authorization: `Bearer ${token}`
   }})
 }
+
+// USERS END -------------------------------------

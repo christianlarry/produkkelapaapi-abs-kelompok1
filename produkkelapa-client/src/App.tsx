@@ -10,6 +10,11 @@ import AdminProduk from './pages/Admin/AdminProduk/AdminProduk'
 import AdminContainer from './pages/Admin/AdminContainer'
 import AdminUsersTambah from './pages/Admin/AdminUsers/AdminUsersTambah'
 import AdminUsersUbah from './pages/Admin/AdminUsers/AdminUsersUbah'
+import AdminTokoTambah from './pages/Admin/AdminToko/AdminTokoTambah'
+import AdminTokoUbah from './pages/Admin/AdminToko/AdminTokoUbah'
+import AdminProdukTambah from './pages/Admin/AdminProduk/AdminProdukTambah'
+import AdminProdukUbah from './pages/Admin/AdminProduk/AdminProdukUbah'
+import AdminTokoProduk from './pages/Admin/AdminToko/AdminTokoProduk'
 
 function App() {
   return (
@@ -22,8 +27,15 @@ function App() {
           <Route path='/admin/users' element={<AdminUsers/>}/>
           <Route path='/admin/users/tambah' element={<AdminUsersTambah/>}/>
           <Route path='/admin/users/:id/ubah' element={<AdminUsersUbah/>}/>
+
           <Route path='/admin/toko' element={<AdminToko/>}/>
+          <Route path='/admin/toko/tambah' element={<AdminTokoTambah/>}/>
+          <Route path='/admin/toko/:id/ubah' element={<AdminTokoUbah/>}/>
+          <Route path='/admin/toko/:id/produk' element={<AdminTokoProduk/>}/>
+          <Route path='/admin/toko/:id/produk/tambah' element={<AdminProdukTambah/>}/>
+
           <Route path='/admin/produk' element={<AdminProduk/>}/>
+          <Route path='/admin/produk/:id/ubah' element={<AdminProdukUbah/>}/>
         </Route>
         
         <Route path='/register' element={<Register/>}/>

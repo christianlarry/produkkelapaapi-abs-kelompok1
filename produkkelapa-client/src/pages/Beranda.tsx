@@ -86,11 +86,9 @@ const Beranda = () => {
                     <td>{data.nama_toko}</td>
                     <td>{data.daerah}</td>
                     <td>
-                      <button className="btn btn-primary btn-sm">
-                        <Link to={`/toko/${data.id}/produk`} state={{toko:{nama_toko: data.nama_toko,daerah: data.daerah}}}>
-                          Lihat Produk
-                        </Link>
-                      </button>
+                      <Link className="btn btn-primary btn-sm" to={`/toko/${data.id}/produk`}>
+                        Lihat Produk
+                      </Link>
                     </td>
                   </tr>
                 ))}

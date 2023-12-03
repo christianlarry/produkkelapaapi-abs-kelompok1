@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { getToko, searchToko } from "../../../services/api"
+import { deleteToko, getToko, searchToko } from "../../../services/api"
 import {isAxiosError} from "axios"
-import { Link, useOutletContext } from "react-router-dom"
+import { Link, useNavigate, useOutletContext } from "react-router-dom"
 import Navbar from "../../../components/Navbar"
 
 type UsersRole = 'admin'|'user'
@@ -61,6 +61,25 @@ const AdminToko = () => {
     }
   }, [page, token])
 
+  const navigate = useNavigate()
+
+  const hapusToko = (id:number,namaToko:string)=>{
+    if(window.confirm(`Hapus toko ${namaToko}?`)){
+      deleteToko(token,id)
+        .then(res=>{
+          if(res.status === 200){
+            window.alert('Berhasil menghapus toko!')
+            // REFRESH
+            navigate(0)
+          }
+        })
+        .catch(err=>{
+          if(isAxiosError(err) && err.response && err.response.status === 404) return alert('Gagal menghapus toko, Toko tidak ditemukkan!')
+          alert('Gagal menghapus toko, Terjadi kesalahan!')
+        })
+    }
+  }
+
   return (
     <div className='container mx-auto'>
       <Navbar />
@@ -68,7 +87,7 @@ const AdminToko = () => {
         <section className="flex flex-col items-center gap-12">
           <h2 className="text-lg font-bold text-center"><span className="text-red-500">[ADMIN]</span> Data Toko Produk Olahan Kelapa</h2>
           <div className="flex gap-5">
-            <button className="btn btn-outline btn-success">+ Tambah Toko</button>
+            <Link to='/admin/toko/tambah' className="btn btn-outline btn-success">+ Tambah Toko</Link>
             <input type="text" placeholder="Cari Toko" className="input input-bordered w-full max-w-xs" onChange={handleSearchInput} />
           </div>
           <div className="overflow-x-auto self-stretch">
@@ -79,7 +98,7 @@ const AdminToko = () => {
                   <th></th>
                   <th>Nama Toko</th>
                   <th>Daerah</th>
-                  <th style={{width: 300}}>Aksi</th>
+                  <th style={{width: 450}}>Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -88,18 +107,17 @@ const AdminToko = () => {
                     <th>{(((isSearch ? 1 : page) - 1) * 25 + 1) + i}</th>
                     <td>{data.nama_toko}</td>
                     <td>{data.daerah}</td>
-                    <td className="flex gap-2">
-                      <button className="btn btn-primary btn-sm">
-                        <Link to={`/admin/toko/${data.id}/produk`} state={{ toko: { nama_toko: data.nama_toko, daerah: data.daerah } }}>
-                          Lihat Produk
-                        </Link>
-                      </button>
-                      <button className="btn btn-warning btn-sm">
-                        <Link to={`/toko/${data.id}/ubah`} state={{ toko: { nama_toko: data.nama_toko, daerah: data.daerah } }}>
-                          Ubah
-                        </Link>
-                      </button>
-                      <button className="btn btn-error btn-sm">
+                    <td className="flex gap-2 flex-wrap">
+                      <Link className="btn btn-primary btn-sm" to={`/admin/toko/${data.id}/produk`}>
+                        Lihat Produk
+                      </Link>
+                      <Link className="btn btn-success btn-sm" to={`/admin/toko/${data.id}/produk/tambah`}>
+                        Tambah Produk
+                      </Link>
+                      <Link className="btn btn-warning btn-sm" to={`/admin/toko/${data.id}/ubah`}>
+                        Ubah
+                      </Link>
+                      <button className="btn btn-error btn-sm" onClick={()=>hapusToko(data.id,data.nama_toko)}>
                         <span>
                           Hapus
                         </span>

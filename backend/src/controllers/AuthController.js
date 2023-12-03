@@ -67,7 +67,7 @@ export const handleLogout = (req, res) => {
 	const authHeader = req.headers['authorization']
 	const token = authHeader && authHeader.split(' ')[1]
 
-	if (!token) return response.resFailed(404, {
+	if (!token) return response.resFailed(403, {
 		message: 'Sedang tidak login'
 	}, 'Logout failed', res)
 

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { Link,useNavigate } from "react-router-dom"
 import { postLogin } from "../services/api"
 import axios from 'axios'
@@ -7,14 +7,12 @@ const Login = () => {
   const navigate = useNavigate()
   const [error,setError] = useState<{type:string,msg:string,path:string,location:string}[]>()
 
-  const usernameRef:React.RefObject<HTMLInputElement> = useRef(null)
-  const passwordRef:React.RefObject<HTMLInputElement> = useRef(null)
+  const [username,setUsername] = useState<string>()
+  const [password,setPassword] = useState<string>()
 
-  const handleLogin = ()=>{
-    if(usernameRef.current && passwordRef.current){
-      const username = usernameRef.current.value?usernameRef.current.value:''
-      const password = passwordRef.current.value?passwordRef.current.value:''
-  
+  const handleLogin = (e:React.FormEvent)=>{
+    e.preventDefault()
+    if(username && password){
       postLogin({username,password})
         .then(value=>{
           if(value.status === 200){
@@ -52,23 +50,21 @@ const Login = () => {
               ))}
             </div>
             }
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleLogin}>
               <div>
                 <label className="label">
                   <span className="text-base label-text">Username</span>
                 </label>
-                <input ref={usernameRef} type="text" placeholder="Username" className="w-full input input-bordered" required/>
+                <input onChange={(e)=>setUsername(e.target.value)} type="text" placeholder="Username" className="w-full input input-bordered" required/>
               </div>
               <div>
                 <label className="label">
                   <span className="text-base label-text">Password</span>
                 </label>
-                <input ref={passwordRef} type="password" placeholder="Masukkan Password"
+                <input onChange={(e)=>setPassword(e.target.value)} type="password" placeholder="Masukkan Password"
                   className="w-full input input-bordered" required/>
               </div>
-              <div>
-                <button className="btn btn-block" type="button" onClick={handleLogin}>Login</button>
-              </div>
+              <button className="btn btn-block btn-primary">Login</button>
               <span>Belum punya akun ?
                 <Link to="/register" className="text-blue-600 hover:text-blue-800 hover:underline">Register</Link></span>
             </form>
