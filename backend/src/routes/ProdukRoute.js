@@ -33,7 +33,7 @@ const router = express.Router()
 router.get('/produk',ProdukController.getAllData)
 
 // GET PENDING PRODUK
-router.get('/produk/pending',ProdukController.getAllPendingProduk)
+router.get('/produk/pending',checkRole('admin'),ProdukController.getAllPendingProduk)
 router.get('/produk/pending/post-by/:id',ProdukController.getPendingProdukByPostById)
 
 router.get('/produk/:id',ProdukController.getDataById)
@@ -45,6 +45,8 @@ router.delete('/produk/:id',checkRole('admin'),ProdukController.deleteData)
 // POST/DELETE PENDING PRODUK
 router.post('/produk/pending',validation,ProdukController.postPendingProduk)
 router.post('/produk/pending/:id/approve',checkRole('admin'),ProdukController.approvePendingProduk)
+router.post('/produk/pending/:id/reject',checkRole('admin'),ProdukController.rejectPendingProduk)
+
 router.delete('/produk/pending/:id',ProdukController.deletePendingProduk)
 
 export default router

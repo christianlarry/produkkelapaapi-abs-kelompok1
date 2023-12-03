@@ -65,7 +65,8 @@ const Beranda = () => {
       <div className="py-10">
         <section className="flex flex-col items-center gap-12">
           <h2 className="text-lg font-bold text-center">Daftar Toko yang menjual Produk Olahan Kelapa di Sulawesi Utara</h2>
-          <div>
+          <div className="flex gap-5">
+            <Link to='/toko/tambah' className="btn btn-outline btn-success">+ Tambah Toko</Link>
             <input type="text" placeholder="Cari Toko" className="input input-bordered w-full max-w-xs" onChange={handleSearchInput} />
           </div>
           <div className="overflow-x-auto self-stretch">

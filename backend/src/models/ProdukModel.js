@@ -82,26 +82,40 @@ export const deleteData = (id) => {
 
 // PENDING PRODUK MODEL
 export const getAllPendingProduk = ()=>{
-    const sql = 'SELECT * FROM pending_produk'
+    const sql = `SELECT pending_produk.*,toko.nama_toko,toko.daerah,users.username AS post_by_username FROM pending_produk
+                INNER JOIN toko ON id_toko=toko.id
+                INNER JOIN users ON post_by=users.id`
 
     return db.query(sql)
 }
 
 export const getPendingProdukById = (id)=>{
-    const sql = `SELECT * FROM pending_produk WHERE id=${id}`
+    const sql = `SELECT pending_produk.*,toko.nama_toko,toko.daerah,users.username AS post_by_username FROM pending_produk 
+                INNER JOIN toko ON id_toko=toko.id
+                INNER JOIN users ON post_by=users.id
+                WHERE pending_produk.id=${id}`
 
     return db.query(sql)
 }
 
 export const getPendingProdukByPostById = (postById)=>{
-    const sql = `SELECT * FROM pending_produk WHERE post_by=${postById}`
+    const sql = `SELECT pending_produk.*,toko.nama_toko,toko.daerah,users.username AS post_by_username FROM pending_produk
+                INNER JOIN toko ON id_toko=toko.id
+                INNER JOIN users ON post_by=users.id 
+                WHERE post_by=${postById}`
 
     return db.query(sql)
 }
 
 export const postPendingProduk = (body)=>{
-    const sql = `INSERT INTO pending_produk(post_by,id_toko,nama_produk,harga,description,manfaat) VALUES
-                (${body.postBy},${body.idToko},'${body.namaProduk}',${body.harga},'${body.description}','${body.manfaat}')`
+    const sql = `INSERT INTO pending_produk(post_by,id_toko,nama_produk,harga,description,manfaat,status) VALUES
+                (${body.postBy},${body.idToko},'${body.namaProduk}',${body.harga},'${body.description}','${body.manfaat}','pending')`
+
+    return db.query(sql)
+}
+
+export const patchPendingProdukStatus = (id,status)=>{
+    const sql = `UPDATE pending_produk SET status='${status}' WHERE id=${id}`
 
     return db.query(sql)
 }

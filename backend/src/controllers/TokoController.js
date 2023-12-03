@@ -205,7 +205,7 @@ export const deletePendingToko = async (req,res)=>{
 		const [pendingToko] = await Toko.getPendingTokoById(req.params.id)
 		if(pendingToko.length === 0) return response.resFailed(404,{message: `Pending toko with id ${req.params.id} not found`},'DELETE pending toko failed',res)
 
-		if(req.user.id != pendingToko[0].post_by) return response.resFailed(403,{message: `Tidak memiliki izin untuk menghapus data user lain`},'DELETE pending toko failed',res)
+		if(req.user.id != pendingToko[0].post_by && req.user.role != 'admin') return response.resFailed(403,{message: `Tidak memiliki izin untuk menghapus data user lain`},'DELETE pending toko failed',res)
 
 		const [result] = await Toko.deletePendingToko(req.params.id)
 		response.resSuccess(200,result,'DELETE pending toko success',res)
@@ -224,12 +224,29 @@ export const approvePendingToko = async (req,res)=>{
 		if(pendingToko.length <= 0) return response.resFailed(404,{message: 'Data not found'},'POST approve pending toko failed',res)
 
 		await Toko.postData({namaToko:pendingToko[0].nama_toko,daerah:pendingToko[0].daerah})
-		await Toko.deletePendingToko(pendingToko[0].id)
+		await Toko.patchPendingTokoStatus(req.params.id,'approved')
 
 		res.sendStatus(200)
 
 	} catch (err) {
 		console.log(err)
 		response.resFailed(500,err,'POST approve pending toko failed',res)
+	}
+}
+
+export const rejectPendingToko = async (req,res)=>{
+	try {
+		if(isNaN(req.params.id)) return response.resFailed(400,{message: 'Bad request, ID must be a number'},'POST reject pending toko failed',res)
+
+		const [pendingToko] = await Toko.getPendingTokoById(req.params.id)
+		if(pendingToko.length <= 0) return response.resFailed(404,{message: 'Data not found'},'POST reject pending toko failed',res)
+
+		await Toko.patchPendingTokoStatus(req.params.id,'rejected')
+
+		res.sendStatus(200)
+
+	} catch (err) {
+		console.log(err)
+		response.resFailed(500,err,'POST reject pending toko failed',res)
 	}
 }

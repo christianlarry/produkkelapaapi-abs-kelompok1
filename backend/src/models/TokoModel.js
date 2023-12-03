@@ -49,26 +49,37 @@ export const deleteData = (id)=>{
 
 // PENDING TOKO MODEL
 export const getAllPendingToko = ()=>{
-    const sql = 'SELECT * FROM pending_toko'
+    const sql = `SELECT pending_toko.*,users.username AS post_by_username FROM pending_toko
+                INNER JOIN users ON post_by=users.id`
 
     return db.query(sql)
 }
 
 export const getPendingTokoById = (id)=>{
-    const sql = `SELECT * FROM pending_toko WHERE id=${id}`
+    const sql = `SELECT pending_toko.*,users.username AS post_by_username FROM pending_toko 
+                INNER JOIN users ON post_by=users.id
+                WHERE pending_toko.id=${id}`
 
     return db.query(sql)
 }
 
 export const getPendingTokoByPostById = (postById)=>{
-    const sql = `SELECT * FROM pending_toko WHERE post_by=${postById}`
+    const sql = `SELECT pending_toko.*,users.username AS post_by_username FROM pending_toko
+                INNER JOIN users ON post_by=users.id 
+                WHERE post_by=${postById}`
 
     return db.query(sql)
 }
 
 export const postPendingToko = (body)=>{
-    const sql = `INSERT INTO pending_toko(post_by,nama_toko,daerah) VALUES
-                (${body.postBy},'${body.namaToko}','${body.daerah}')`
+    const sql = `INSERT INTO pending_toko(post_by,nama_toko,daerah,status) VALUES
+                (${body.postBy},'${body.namaToko}','${body.daerah}','pending')`
+
+    return db.query(sql)
+}
+
+export const patchPendingTokoStatus = (id,status)=>{
+    const sql = `UPDATE pending_toko SET status='${status}' WHERE id=${id}`
 
     return db.query(sql)
 }

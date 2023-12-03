@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { getProdukByIdToko, getTokoById } from "../services/api"
 import useToken from "../hooks/useToken"
 import Navbar from "../components/Navbar"
@@ -65,6 +65,7 @@ const Produk = ()=>{
             <h2 className="text-lg font-bold text-center">Produk Olahan Kelapa yang dijual di Toko <b>{toko.nama_toko}</b></h2>
             <span>{toko.daerah}</span>
           </div>
+          <Link to='tambah' className="btn btn-outline btn-success">+ Tambah Produk</Link>
           <div className="overflow-x-auto self-stretch">
             <table className="table">
               {/* head */}

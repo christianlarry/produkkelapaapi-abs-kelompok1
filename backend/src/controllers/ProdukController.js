@@ -155,7 +155,7 @@ export const postPendingProduk = async (req,res)=>{
 		}
 
 		const [pendingDataByUser] = await Produk.getPendingProdukByPostById(req.user.id)
-		if(pendingDataByUser.length >= 3 && req.user.role != 'admin') return response.resFailed(403,{message: 'Telah mencapai batas maksimum pending post data produk sebanyak 3 kali'},'POST pending produk failed',res)
+		if(pendingDataByUser.length >= 5 && req.user.role != 'admin') return response.resFailed(403,{message: 'Telah mencapai batas maksimum pending post data produk sebanyak 3 kali'},'POST pending produk failed',res)
 
 		const [toko] = await getTokoById(req.body.idToko)
 		if(toko.length === 0) return response.resFailed(404,{message:`Toko with id ${req.body.idToko} not found!`},'POST produk failed',res)
@@ -177,7 +177,7 @@ export const deletePendingProduk = async (req,res)=>{
 		const [pendingProduk] = await Produk.getPendingProdukById(req.params.id)
 		if(pendingProduk.length === 0) return response.resFailed(404,{message: `Pending produk with id ${req.params.id} not found`},'DELETE pending produk failed',res)
 
-		if(req.user.id != pendingProduk[0].post_by) return response.resFailed(403,{message: `Tidak memiliki izin untuk menghapus data user lain`},'DELETE pending produk failed',res)
+		if(req.user.id != pendingProduk[0].post_by && req.user.role != 'admin') return response.resFailed(403,{message: `Tidak memiliki izin untuk menghapus data user lain`},'DELETE pending produk failed',res)
 
 		const [result] = await Produk.deletePendingProduk(req.params.id)
 		response.resSuccess(200,result,'DELETE pending produk success',res)
@@ -202,12 +202,29 @@ export const approvePendingProduk = async (req,res)=>{
 			description:pendingProduk[0].description,
 			manfaat:pendingProduk[0].manfaat,
 		})
-		await Produk.deletePendingProduk(pendingProduk[0].id)
+		await Produk.patchPendingProdukStatus(req.params.id,'approved')
 
 		res.sendStatus(200)
 
 	} catch (err) {
 		console.log(err)
 		response.resFailed(500,err,'POST approve pending produk failed',res)
+	}
+}
+
+export const rejectPendingProduk = async (req,res)=>{
+	try {
+		if(isNaN(req.params.id)) return response.resFailed(400,{message: 'Bad request, ID must be a number'},'POST reject pending produk failed',res)
+
+		const [pendingToko] = await Produk.getPendingProdukById(req.params.id)
+		if(pendingToko.length <= 0) return response.resFailed(404,{message: 'Data not found'},'POST reject pending produk failed',res)
+
+		await Produk.patchPendingProdukStatus(req.params.id,'rejected')
+
+		res.sendStatus(200)
+
+	} catch (err) {
+		console.log(err)
+		response.resFailed(500,err,'POST reject pending produk failed',res)
 	}
 }

@@ -20,6 +20,54 @@ export const getTokoById = (token:string,id:number)=>{
   })
 }
 
+export const getPendingToko = (token:string)=>{
+  return axios.get(`${baseUrl}api/toko/pending`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const getPendingTokoByPostBy = (token:string,id:number)=>{
+  return axios.get(`${baseUrl}api/toko/pending/post-by/${id}`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const postPendingToko = (token:string,data:{namaToko:string,daerah:string})=>{
+  return axios.post(`${baseUrl}api/toko/pending`,data,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const postApprovePendingToko = (token:string,id:number)=>{
+  return axios.post(`${baseUrl}api/toko/pending/${id}/approve`,{},{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const postRejectPendingToko = (token:string,id:number)=>{
+  return axios.post(`${baseUrl}api/toko/pending/${id}/reject`,{},{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const deletePendingToko = (token:string,id:number)=>{
+  return axios.delete(`${baseUrl}api/toko/pending/${id}`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
 export const searchToko = (token:string,search:string)=>{
   return axios.get(`${baseUrl}api/toko?search=${search}`,{
     headers: {
@@ -66,6 +114,54 @@ export const getAllProduk = (token:string,page:number=1,limit:number=25)=>{
 
 export const getProdukById = (token:string,id:number)=>{
   return axios.get(`${baseUrl}api/produk/${id}`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const getPendingProduk = (token:string)=>{
+  return axios.get(`${baseUrl}api/produk/pending`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const getPendingProdukByPostBy = (token:string,id:number)=>{
+  return axios.get(`${baseUrl}api/produk/pending/post-by/${id}`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const postPendingProduk = (token:string,data:{idToko:number,namaProduk:string,harga:number,description:string,manfaat:string})=>{
+  return axios.post(`${baseUrl}api/produk/pending`,data,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const postApprovePendingProduk = (token:string,id:number)=>{
+  return axios.post(`${baseUrl}api/produk/pending/${id}/approve`,{},{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const postRejectPendingProduk = (token:string,id:number)=>{
+  return axios.post(`${baseUrl}api/produk/pending/${id}/reject`,{},{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const deletePendingProduk = (token:string,id:number)=>{
+  return axios.delete(`${baseUrl}api/produk/pending/${id}`,{
     headers: {
       Authorization: `Bearer ${token}`
     }

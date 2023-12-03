@@ -15,13 +15,19 @@ import AdminTokoUbah from './pages/Admin/AdminToko/AdminTokoUbah'
 import AdminProdukTambah from './pages/Admin/AdminProduk/AdminProdukTambah'
 import AdminProdukUbah from './pages/Admin/AdminProduk/AdminProdukUbah'
 import AdminTokoProduk from './pages/Admin/AdminToko/AdminTokoProduk'
+import TambahToko from './pages/TambahToko'
+import TambahProduk from './pages/TambahProduk'
+import AdminPendingData from './pages/Admin/AdminPendingData'
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path='/' element={<Beranda/>}/>
+        <Route path='/toko/tambah' element={<TambahToko/>}/>
         <Route path='/toko/:id/produk' element={<Produk/>}/>
+
+        <Route path='/toko/:id/produk/tambah' element={<TambahProduk/>}/>
         
         <Route element={<AdminContainer/>}>
           <Route path='/admin/users' element={<AdminUsers/>}/>
@@ -36,6 +42,8 @@ function App() {
 
           <Route path='/admin/produk' element={<AdminProduk/>}/>
           <Route path='/admin/produk/:id/ubah' element={<AdminProdukUbah/>}/>
+
+          <Route path='/admin/pending-data' element={<AdminPendingData/>}/>
         </Route>
         
         <Route path='/register' element={<Register/>}/>

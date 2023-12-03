@@ -54,6 +54,7 @@ const Navbar = () => {
                 <li><Link to='/admin/users' style={{whiteSpace:'nowrap'}}>Data User</Link></li>
                 <li><Link to='/admin/toko' style={{whiteSpace:'nowrap'}}>Data Toko</Link></li>
                 <li><Link to='/admin/produk' style={{whiteSpace:'nowrap'}}>Data Produk</Link></li>
+                <li><Link to='/admin/pending-data' style={{whiteSpace:'nowrap'}}>Pending Data</Link></li>
               </ul>
             </details>
           </li>}

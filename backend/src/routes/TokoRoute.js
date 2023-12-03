@@ -22,7 +22,7 @@ const validation = [
 router.get('/toko',TokoController.getAllData)
 
 // GET PENDING TOKO
-router.get('/toko/pending',TokoController.getAllPendingToko)
+router.get('/toko/pending',checkRole('admin'),TokoController.getAllPendingToko)
 router.get('/toko/pending/post-by/:id',TokoController.getPendingTokoByPostById)
 // router.get('/toko/pending/:id',TokoController.getPendingTokoById)
 
@@ -36,6 +36,8 @@ router.delete('/toko/:id',checkRole('admin'),TokoController.deleteData)
 // POST/DELETE PENDING TOKO
 router.post('/toko/pending',validation,TokoController.postPendingToko)
 router.post('/toko/pending/:id/approve',checkRole('admin'),TokoController.approvePendingToko)
+router.post('/toko/pending/:id/reject',checkRole('admin'),TokoController.rejectPendingToko)
+
 router.delete('/toko/pending/:id',TokoController.deletePendingToko)
 
 export default router
